@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ProductDto } from "./dto/product.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductRepository } from "./product.repository";
 
@@ -35,7 +35,7 @@ export class ProductService {
 
   async putProduct(
     id: number,
-    data: Partial<ProductDto>,
+    data: Partial<CreateProductDto>,
   ): Promise<Record<string, ProductEntity[]>> {
     const product = await this.productRepository.updateProduct(id, data);
 

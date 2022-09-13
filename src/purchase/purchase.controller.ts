@@ -25,6 +25,7 @@ export class PurchaseController {
   })
   @ApiCreatedResponse({
     description: "The purchase has been successfully created.",
+    type: PurchaseDto,
   })
   @SetMetadata("role", "buyer")
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -38,7 +39,7 @@ export class PurchaseController {
     return this.purchaseService.executePurchase(
       req.user.id,
       productId,
-      Number(quantity),
+      quantity,
     );
   }
 }

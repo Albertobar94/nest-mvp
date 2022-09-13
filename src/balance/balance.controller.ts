@@ -9,9 +9,10 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiHeader, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import BalanceDto from "./dto/balance.dto";
+import { AmountDto } from "./dto/amount.dto";
 import { RoleGuard } from "../auth/guards/roles.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import DepositDto from "./dto/deposit.dto";
 
 @Controller("balance")
 export class BalanceController {
@@ -24,19 +25,20 @@ export class BalanceController {
   })
   @ApiOkResponse({
     description: "The user has successfully added to his/her balance.",
+    type: DepositDto,
   })
   @SetMetadata("role", "buyer")
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(200)
   @Post("deposit")
-  async addBalance(@Body() payload: BalanceDto, @Request() req: any) {
-    const balance = await this.balanceService.addBalance(
+  async addBalance(@Body() payload: AmountDto, @Request() req: any) {
+    const deposit = await this.balanceService.addBalance(
       req.user.id,
       payload.amount,
     );
 
     return {
-      balance,
+      deposit,
     };
   }
 

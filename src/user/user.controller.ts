@@ -15,7 +15,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { UserDto } from "./dto/user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UserEntity } from "./entities/user.entity";
 import { UserService } from "./user.service";
 
@@ -54,7 +54,7 @@ export class UserController {
   })
   @HttpCode(201)
   @Post()
-  async postUser(@Body() data: UserDto) {
+  async postUser(@Body() data: CreateUserDto) {
     const { user } = await this.userService.postUser(data);
 
     return {

@@ -12,7 +12,7 @@ import { databaseExceptionMapper } from "../utils/exceptionMappers/db-exeption-m
 
 @Injectable()
 export class DatabaseErrorInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError((error) => {
         const [status, message] = databaseExceptionMapper(error);

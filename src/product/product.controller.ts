@@ -20,7 +20,7 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
 } from "@nestjs/swagger";
-import { ProductDto } from "./dto/product.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductService } from "./product.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
@@ -93,7 +93,7 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(201)
   @Post()
-  async postProduct(@Body() product: ProductDto, @Request() req: any) {
+  async postProduct(@Body() product: CreateProductDto, @Request() req: any) {
     const data = await this.productService.postProduct({
       ...product,
       sellerId: req.user.id,
@@ -120,7 +120,7 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RoleGuard, isResourceOwnerGuard)
   @Put("/:id")
   async putProduct(
-    @Body() product: Partial<ProductDto>,
+    @Body() product: CreateProductDto,
     @Param("id", ParseIntPipe) id: number,
   ) {
     const data = await this.productService.putProduct(id, product);

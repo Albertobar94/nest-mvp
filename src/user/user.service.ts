@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { Injectable } from "@nestjs/common";
-import { UserDto } from "./dto/user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UserEntity } from "./entities/user.entity";
 import { UserRepository } from "./user.repository";
 
@@ -16,7 +16,7 @@ export class UserService {
     };
   }
 
-  async postUser(data: UserDto): Promise<Record<string, UserEntity[]>> {
+  async postUser(data: CreateUserDto): Promise<Record<string, UserEntity[]>> {
     const password = await bcrypt.hash(
       data.password,
       Number(process.env.BCRYPT_ROUNDS) || 10,

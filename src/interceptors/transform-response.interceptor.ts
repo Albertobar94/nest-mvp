@@ -15,10 +15,7 @@ export interface Response<T> {
 export class TransformResponseInterceptor<T>
   implements NestInterceptor<T, Response<T>>
 {
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<Response<T>> {
+  intercept(_: ExecutionContext, next: CallHandler): Observable<Response<T>> {
     return next.handle().pipe(
       map((data) => ({
         success: true,

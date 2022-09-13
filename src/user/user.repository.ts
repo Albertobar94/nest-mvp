@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { UserDto } from "./dto/user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { InjectModel } from "nest-knexjs";
 import { UserEntity } from "./entities/user.entity";
 import { Injectable } from "@nestjs/common";
@@ -36,7 +36,7 @@ export class UserRepository {
     });
   }
 
-  async insertUser(data: UserDto) {
+  async insertUser(data: CreateUserDto) {
     const user = await this.knex
       .from<UserEntity>("user")
       .insert({ ...data }, "*");

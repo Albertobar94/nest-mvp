@@ -21,7 +21,7 @@ export class PurchaseService {
   ) {}
 
   async executePurchase(
-    buyerId: PurchaseDto["buyerId"],
+    buyerId: number,
     productId: PurchaseDto["productId"],
     purchaseQuantity: PurchaseDto["quantity"],
   ) {
@@ -80,9 +80,11 @@ export class PurchaseService {
         );
 
       return {
+        sellerId: purchase.sellerId,
         productId: purchase.itemId,
         productName: purchase.itemName,
-        total: purchase.total,
+        quantity: purchase.itemsTotal,
+        purchaseTotal: purchase.total,
         change: balanceToCoins(buyersFinalBalance),
       };
     });

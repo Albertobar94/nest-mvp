@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { ProductDto } from "./dto/product.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
 import { InjectModel } from "nest-knexjs";
 import { Injectable } from "@nestjs/common";
 import { ProductEntity } from "./entities/product.entity";
@@ -31,7 +31,7 @@ export class ProductRepository {
     });
   }
 
-  async insertProduct(data: ProductDto) {
+  async insertProduct(data: CreateProductDto) {
     const product = await this.knex
       .from<ProductEntity>("product")
       .insert({ ...data }, "*");
@@ -43,7 +43,10 @@ export class ProductRepository {
     });
   }
 
-  async updateProduct(id: ProductEntity["id"], data: Partial<ProductDto>) {
+  async updateProduct(
+    id: ProductEntity["id"],
+    data: Partial<CreateProductDto>,
+  ) {
     const product = await this.knex
       .from<ProductEntity>("product")
       .update({ ...data }, "*")

@@ -1,5 +1,12 @@
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import { Controller, HttpCode, Post, Request, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import {
@@ -9,28 +16,35 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { extractBearerToken } from "../utils/helpers/extractBearerToken";
+import { LoggedInDto } from "./dto/logged-in.dto";
+import LoginDto from "./dto/login.dto";
 
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiTags("Auth")
+  @ApiHeader({
+    name: "Authorization",
+    description: "Bearer user JWT token",
+  })
   @ApiOkResponse({
     description: "The user has been successfully logged in.",
+    type: LoggedInDto,
   })
   @UseGuards(LocalAuthGuard)
   @Post("login")
-  async login(@Request() req: any) {
+  async login(@Request() req: any, @Body() _: LoginDto) {
     return this.authService.login(req.user);
   }
 
   @ApiTags("Auth")
-  @ApiNoContentResponse({
-    description: "The user has been successfully logged out.",
-  })
   @ApiHeader({
     name: "Authorization",
     description: "Bearer user JWT token",
+  })
+  @ApiNoContentResponse({
+    description: "The user has been successfully logged out.",
   })
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
