@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateProductDto } from "./dto/create-product.dto";
+import UpdateProductDto from "./dto/update-prodcut.dto";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductRepository } from "./product.repository";
 
@@ -24,9 +24,10 @@ export class ProductService {
   }
 
   async postProduct(
-    data: Omit<ProductEntity, "id">,
+    sellerId: number,
+    data: Omit<ProductEntity, "id" | "sellerId">,
   ): Promise<Record<string, ProductEntity[]>> {
-    const product = await this.productRepository.insertProduct(data);
+    const product = await this.productRepository.insertProduct(sellerId, data);
 
     return {
       product,
@@ -34,17 +35,22 @@ export class ProductService {
   }
 
   async putProduct(
+    sellerId: number,
     id: number,
-    data: Partial<CreateProductDto>,
+    data: Partial<UpdateProductDto>,
   ): Promise<Record<string, ProductEntity[]>> {
-    const product = await this.productRepository.updateProduct(id, data);
+    const product = await this.productRepository.updateProduct(
+      sellerId,
+      id,
+      data,
+    );
 
     return {
       product,
     };
   }
 
-  async deleteProduct(id: number): Promise<number> {
-    return this.productRepository.deleteProduct(id);
+  async deleteProduct(sellerId: number, id: number): Promise<number> {
+    return this.productRepository.deleteProduct(sellerId, id);
   }
 }

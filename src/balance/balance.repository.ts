@@ -11,9 +11,13 @@ export class BalanceRepository {
       ? this.knex.from("user").transacting(trx).forUpdate()
       : this.knex.from("user");
 
-    const [{ deposit }] = await query.select("deposit").where("id", userId);
+    const [result] = await query.select("deposit").where("id", userId);
 
-    return deposit;
+    if (result && "deposit" in result) {
+      return result.deposit;
+    }
+
+    throw new ConflictException("Could get deposit");
   }
 
   async resetBalance(userId: number, trx?: Knex.Transaction): Promise<number> {
@@ -21,12 +25,16 @@ export class BalanceRepository {
       ? this.knex.from("user").transacting(trx)
       : this.knex.from("user");
 
-    const [{ deposit }] = await query
+    const [result] = await query
       .update({ deposit: 0 })
       .where("id", userId)
       .returning("deposit");
 
-    return deposit;
+    if (result && "deposit" in result) {
+      return result.deposit;
+    }
+
+    throw new ConflictException("Could not reset deposit");
   }
 
   async addBalance(
@@ -38,12 +46,16 @@ export class BalanceRepository {
       ? this.knex.from("user").transacting(trx)
       : this.knex.from("user");
 
-    const [{ deposit }] = await query
+    const [result] = await query
       .update({ deposit: this.knex.raw("deposit + ??", [amount]) })
       .where("id", userId)
       .returning("deposit");
 
-    return deposit;
+    if (result && "deposit" in result) {
+      return result.deposit;
+    }
+
+    throw new ConflictException("Could not deposit amount");
   }
 
   async subtractBalance(
@@ -55,12 +67,16 @@ export class BalanceRepository {
       ? this.knex.from("user").transacting(trx)
       : this.knex.from("user");
 
-    const [{ deposit }] = await query
+    const [result] = await query
       .update({ deposit: this.knex.raw("deposit - ??", [amount]) })
       .where("id", userId)
       .returning("deposit");
 
-    return deposit;
+    if (result && "deposit" in result) {
+      return result.deposit;
+    }
+
+    throw new ConflictException("Could not subtract deposit amount");
   }
 
   async transferBalance(

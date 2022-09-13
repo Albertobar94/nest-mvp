@@ -1,3 +1,6 @@
+import { AuthService } from "./../auth/auth.service";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { isResourceOwnerGuard } from "./../product/guards/is-resource-owner.guard";
 import { ParseIntPipe } from "./../pipes/parse-int.pipe";
 import {
   Body,
@@ -7,6 +10,8 @@ import {
   HttpCode,
   Param,
   Post,
+  Request,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiCreatedResponse,
@@ -21,7 +26,10 @@ import { UserService } from "./user.service";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   /* -------------------------------------------------------------------------- */
   /*                               Get User By Id                               */
@@ -35,7 +43,8 @@ export class UserController {
     description: "The record has been successfully fetched.",
     type: [UserEntity],
   })
-  @Get()
+  @UseGuards(JwtAuthGuard, isResourceOwnerGuard)
+  @Get(":id")
   async getUser(@Param("id", ParseIntPipe) id: number) {
     const { user } = await this.userService.getUser(id);
 
@@ -73,10 +82,15 @@ export class UserController {
   @ApiNoContentResponse({
     description: "The record has been successfully deleted.",
   })
+  @UseGuards(JwtAuthGuard, isResourceOwnerGuard)
   @HttpCode(204)
   @Delete("/:id")
-  async deleteUser(@Param("id", ParseIntPipe) id: UserEntity["id"]) {
+  async deleteUser(
+    @Param("id", ParseIntPipe) id: UserEntity["id"],
+    @Request() req: any,
+  ) {
     await this.userService.deleteUser(id);
+    await this.authService.logoutAll(req.user);
 
     return;
   }

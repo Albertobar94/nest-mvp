@@ -31,10 +31,10 @@ export class ProductRepository {
     });
   }
 
-  async insertProduct(data: CreateProductDto) {
+  async insertProduct(sellerId: number, data: CreateProductDto) {
     const product = await this.knex
       .from<ProductEntity>("product")
-      .insert({ ...data }, "*");
+      .insert({ ...data, sellerId }, "*");
 
     return product.map((product) => {
       return plainToInstance(ProductEntity, product, {
@@ -44,13 +44,14 @@ export class ProductRepository {
   }
 
   async updateProduct(
+    sellerId: number,
     id: ProductEntity["id"],
     data: Partial<CreateProductDto>,
   ) {
     const product = await this.knex
       .from<ProductEntity>("product")
       .update({ ...data }, "*")
-      .where("id", id);
+      .where({ id, sellerId });
 
     return product.map((product) => {
       return plainToInstance(ProductEntity, product, {
@@ -84,8 +85,11 @@ export class ProductRepository {
     });
   }
 
-  async deleteProduct(id: number) {
-    return this.knex.from<ProductEntity>("product").delete().where("id", id);
+  async deleteProduct(sellerId: number, id: number) {
+    return this.knex
+      .from<ProductEntity>("product")
+      .delete()
+      .where({ id, sellerId });
   }
 }
 

@@ -11,8 +11,9 @@ exports.up = async function (knex) {
       .notNullable();
 
     // Product
-    table.integer("item_id").references("product.id").notNullable();
     table.text("item_name").notNullable();
+    table.integer("item_id").references("product.id").onDelete("SET NULL");
+
     table
       .integer("item_cost")
       .defaultTo(0)
@@ -25,15 +26,15 @@ exports.up = async function (knex) {
       .notNullable();
 
     // User
-    table.integer("buyer_id").references("user.id").notNullable();
-    table.integer("seller_id").references("user.id").notNullable();
+    table.integer("buyer_id").references("user.id").onDelete("SET NULL");
+    table.integer("seller_id").references("user.id").onDelete("SET NULL");
   });
 
   await knex.schema.raw(`
-        ALTER TABLE "purchase" ADD CONSTRAINT chk_is_buyer CHECK (is_buyer(buyer_id));
+        ALTER TABLE "purchase" ADD CONSTRAINT chk_is_buyer CHECK ((is_buyer(buyer_id)) or (buyer_id is null));
     `);
   await knex.schema.raw(`
-        ALTER TABLE "purchase" ADD CONSTRAINT chk_is_seller CHECK (is_seller(seller_id)); 
+        ALTER TABLE "purchase" ADD CONSTRAINT chk_is_seller CHECK ((is_seller(seller_id)) or (seller_id is null)); 
     `);
 };
 

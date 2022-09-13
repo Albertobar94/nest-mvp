@@ -1,6 +1,10 @@
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import { BadGatewayException, Injectable } from "@nestjs/common";
+import {
+  BadGatewayException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import UserEntity from "../user/entities/user.entity";
 import UserRepository from "../user/user.repository";
 import { InjectRedis } from "@liaoliaots/nestjs-redis";
@@ -34,9 +38,31 @@ export class AuthService {
     });
   }
 
+  // async validateUserAgainstRedis({ username }) {
+  //   const accessTokens = await this.redis.smembers(username);
+  //   if (!accessTokens.length) {
+  //     throw new UnauthorizedException();
+  //   }
+
+  //   const [token] = accessTokens.filter((t) => accessToken === t);
+  //   if (!token) {
+  //     throw new UnauthorizedException();
+  //   }
+
+  //   return true
+  // }
+
   async logout({ username }: any, accessToken: string) {
     const accessTokens = await this.redis.smembers(username);
+    if (!accessTokens.length) {
+      throw new UnauthorizedException();
+    }
+
     const [token] = accessTokens.filter((t) => accessToken === t);
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+
     const removed = await this.redis.srem(username, token);
     if (removed === 0) {
       throw new BadGatewayException(
@@ -49,6 +75,10 @@ export class AuthService {
 
   async logoutAll({ username }: any) {
     const accessTokens = await this.redis.smembers(username);
+    if (!accessTokens.length) {
+      throw new UnauthorizedException();
+    }
+
     const removed = await this.redis.srem(username, accessTokens);
     if (removed === 0) {
       throw new BadGatewayException(

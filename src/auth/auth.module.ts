@@ -1,5 +1,5 @@
 import { LocalStrategy } from "./strategies/local.strategy";
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { UserModule } from "../user/user.module";
@@ -10,7 +10,7 @@ import { AuthController } from "./auth.controller";
 
 @Module({
   imports: [
-    UserModule,
+    forwardRef(() => UserModule),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,

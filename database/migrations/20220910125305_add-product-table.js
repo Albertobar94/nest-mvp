@@ -4,7 +4,7 @@
  */
 exports.up = async function (knex) {
   await knex.schema.createTable("product", (table) => {
-    table.bigIncrements("id").primary().notNullable();
+    table.bigIncrements("id").primary();
     table.text("name").notNullable();
     table
       .integer("cost")
@@ -19,8 +19,8 @@ exports.up = async function (knex) {
     table
       .integer("seller_id")
       .references("user.id")
-      .onDelete("CASCADE")
-      .notNullable();
+      .notNullable()
+      .onDelete("CASCADE");
   });
 };
 

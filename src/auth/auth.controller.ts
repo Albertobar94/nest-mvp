@@ -23,6 +23,9 @@ import LoginDto from "./dto/login.dto";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /* -------------------------------------------------------------------------- */
+  /*                                    Login                                   */
+  /* -------------------------------------------------------------------------- */
   @ApiTags("Auth")
   @ApiHeader({
     name: "Authorization",
@@ -38,6 +41,9 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                   Logout                                   */
+  /* -------------------------------------------------------------------------- */
   @ApiTags("Auth")
   @ApiHeader({
     name: "Authorization",
@@ -56,6 +62,9 @@ export class AuthController {
     );
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                 Logout All                                 */
+  /* -------------------------------------------------------------------------- */
   @ApiTags("Auth")
   @ApiHeader({
     name: "Authorization",

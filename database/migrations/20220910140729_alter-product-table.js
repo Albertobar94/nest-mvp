@@ -8,8 +8,8 @@ exports.up = async function (knex) {
         SELECT EXISTS (
             SELECT 1
             FROM "user"
-            WHERE id = $1
-            AND role = 'seller'
+            WHERE (id = $1 OR id IS NULL)
+            AND (role = 'seller' OR role IS NULL)
         );
         $$ language sql;
     `);

@@ -25,6 +25,7 @@ import { ProductEntity } from "./entities/product.entity";
 import { ProductService } from "./product.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { isResourceOwnerGuard } from "./guards/is-resource-owner.guard";
+import UpdateProductDto from "./dto/update-prodcut.dto";
 
 /* -------------------------------------------------------------------------- */
 /*                              Get All Products                              */
@@ -94,10 +95,7 @@ export class ProductController {
   @HttpCode(201)
   @Post()
   async postProduct(@Body() product: CreateProductDto, @Request() req: any) {
-    const data = await this.productService.postProduct({
-      ...product,
-      sellerId: req.user.id,
-    });
+    const data = await this.productService.postProduct(req.user.id, product);
 
     return {
       ...data,
@@ -117,13 +115,14 @@ export class ProductController {
     type: [ProductEntity],
   })
   @SetMetadata("role", "seller")
-  @UseGuards(JwtAuthGuard, RoleGuard, isResourceOwnerGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Put("/:id")
   async putProduct(
-    @Body() product: CreateProductDto,
+    @Body() product: UpdateProductDto,
     @Param("id", ParseIntPipe) id: number,
+    @Request() req: any,
   ) {
-    const data = await this.productService.putProduct(id, product);
+    const data = await this.productService.putProduct(req.user.id, id, product);
 
     return {
       ...data,
@@ -145,7 +144,10 @@ export class ProductController {
   @SetMetadata("role", "seller")
   @UseGuards(JwtAuthGuard, RoleGuard, isResourceOwnerGuard)
   @Delete("/:id")
-  async deleteProduct(@Param("id", ParseIntPipe) id: number) {
-    return this.productService.deleteProduct(id);
+  async deleteProduct(
+    @Param("id", ParseIntPipe) id: number,
+    @Request() req: any,
+  ) {
+    return this.productService.deleteProduct(req.user.id, id);
   }
 }
