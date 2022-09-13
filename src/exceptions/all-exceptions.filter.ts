@@ -34,6 +34,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const stack = isHttpException || isError ? exception.stack : undefined;
 
     const responseBody = {
+      success: false,
       errors: [
         {
           name: name,
