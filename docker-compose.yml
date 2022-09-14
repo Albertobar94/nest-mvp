@@ -21,6 +21,7 @@ services:
         environment:
             - NODE_ENV=production
             - ENVIRONMENT=production
+            - PORT=3000
             - DB_NAME=postgres
             - DB_USER=postgres
             - DB_PWD=postgres

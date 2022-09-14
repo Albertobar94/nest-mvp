@@ -12,6 +12,26 @@
 ## Description
 
 Take Home Challenge
+
+## Running the services
+
+```bash
+docker compose up --buid
+```
+> This is the only supported way of running the Nest.js server, PostgreSQL and Redis concurrently.
+
+## Postman collection
+inside postman folder
+```
+cd ./postman
+```
+
+## Using the App
+1. Create a user using POST /user
+2. Login with credentials POST /auth/login (any username and password is accepted)
+3. Take the accessToken and use it as bearer token
+4. Call other endpoints following the challenge requirements
+
 ## Installation
 
 ```bash
@@ -52,7 +72,7 @@ $ npm run test:cov
 ----------+------------------------+-----------+----------+----------------------------------
  id       | integer                |           | not null | nextval('user_id_seq'::regclass)
  username | character varying(256) |           | not null | 
- password | character varying(32)  |           | not null | 
+ password | text                   |           | not null | 
  role     | text                   |           | not null | 
  deposit  | integer                |           | not null | 0
 Indexes:
@@ -63,10 +83,12 @@ Check constraints:
     "user_role_check" CHECK (role = ANY (ARRAY['seller'::text, 'buyer'::text]))
 Referenced by:
     TABLE "product" CONSTRAINT "product_seller_id_foreign" FOREIGN KEY (seller_id) REFERENCES "user"(id) ON DELETE CASCADE
+    TABLE "purchase" CONSTRAINT "purchase_buyer_id_foreign" FOREIGN KEY (buyer_id) REFERENCES "user"(id) ON DELETE SET NULL
+    TABLE "purchase" CONSTRAINT "purchase_seller_id_foreign" FOREIGN KEY (seller_id) REFERENCES "user"(id) ON DELETE SET NULL
 ```
 #### Product
 ```
-                                Table "public.product"
+                                 Table "public.product"
       Column      |  Type   | Collation | Nullable |               Default               
 ------------------+---------+-----------+----------+-------------------------------------
  id               | bigint  |           | not null | nextval('product_id_seq'::regclass)
@@ -82,7 +104,37 @@ Check constraints:
     "product_cost_check" CHECK (cost >= 0 AND cost <= '9007199254740991'::bigint)
 Foreign-key constraints:
     "product_seller_id_foreign" FOREIGN KEY (seller_id) REFERENCES "user"(id) ON DELETE CASCADE
+Referenced by:
+    TABLE "purchase" CONSTRAINT "purchase_item_id_foreign" FOREIGN KEY (item_id) REFERENCES product(id) ON DELETE SET NULL
 ```
+
+#### Purchase
+```
+                                  Table "public.purchase"
+   Column    |  Type   | Collation | Nullable |               Default                
+-------------+---------+-----------+----------+--------------------------------------
+ id          | bigint  |           | not null | nextval('purchase_id_seq'::regclass)
+ total       | integer |           | not null | 
+ item_name   | text    |           | not null | 
+ item_id     | integer |           |          | 
+ item_cost   | integer |           | not null | 0
+ items_total | integer |           | not null | 0
+ buyer_id    | integer |           |          | 
+ seller_id   | integer |           |          | 
+Indexes:
+    "purchase_pkey" PRIMARY KEY, btree (id)
+Check constraints:
+    "chk_is_buyer" CHECK (is_buyer(buyer_id) OR buyer_id IS NULL)
+    "chk_is_seller" CHECK (is_seller(seller_id) OR seller_id IS NULL)
+    "purchase_item_cost_check" CHECK (item_cost >= 0 AND item_cost <= '9007199254740991'::bigint)
+    "purchase_items_total_check" CHECK (items_total >= 0 AND items_total <= '9007199254740991'::bigint)
+    "purchase_total_check" CHECK (total >= 0 AND total <= '9007199254740991'::bigint)
+Foreign-key constraints:
+    "purchase_buyer_id_foreign" FOREIGN KEY (buyer_id) REFERENCES "user"(id) ON DELETE SET NULL
+    "purchase_item_id_foreign" FOREIGN KEY (item_id) REFERENCES product(id) ON DELETE SET NULL
+    "purchase_seller_id_foreign" FOREIGN KEY (seller_id) REFERENCES "user"(id) ON DELETE SET NULL
+```
+
 ## License
 
 Nest is [MIT licensed](LICENSE).

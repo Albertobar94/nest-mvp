@@ -30,6 +30,7 @@ const knexFile = require("../knexfile.js");
       envFilePath: `.env.${ENVIRONMENT}`,
       validationSchema: Joi.object({
         ENVIRONMENT: Joi.string().required(),
+        PORT: Joi.number().required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         DB_USER: Joi.string().required(),
@@ -38,7 +39,6 @@ const knexFile = require("../knexfile.js");
         BCRYPT_ROUNDS: Joi.number().required(),
         REDIS_PORT: Joi.number().required(),
         REDIS_DB: Joi.number().required(),
-        // REDIS_PASSWORD: Joi.string(),
         REDIS_PREFIX: Joi.string().required(),
       }),
     }),
