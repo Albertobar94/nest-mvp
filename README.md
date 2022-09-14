@@ -20,6 +20,21 @@ cd ./postman
 3. Take the accessToken and use it as bearer token
 4. Call other endpoints following the challenge requirements
 
+## Running locally
+
+```
+docker run --name redis -p 6379:6379 -d --rm redis   
+docker run --rm \
+    --name nest-db-mvp \
+    -e 'POSTGRES_PASSWORD=postgres' \
+    -e 'POSTGRES_USER=postgres' \
+    -e 'POSTGRES_DB=postgres' \
+    -p 5432:5432 \
+    -d postgres:12-alpine
+pnpm run db:up
+pnpm run start:dev
+```
+
 ## Installation
 
 ```bash
