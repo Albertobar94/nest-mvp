@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PurchaseService } from "./purchase.service";
 import { PurchaseController } from "./purchase.controller";
 import { PurchaseRepository } from "./purchase.repository";
+import { ConflictException, NotFoundException } from "@nestjs/common";
 
 describe("PurchaseController", () => {
   let controller: PurchaseController;
@@ -50,5 +51,31 @@ describe("PurchaseController", () => {
         change: [100, 20, 10],
       },
     });
+  });
+
+  it("should fail when The product doesn't exist", async () => {
+    FakePurchaseService.executePurchase.mockRejectedValue(
+      new NotFoundException("The product doesn't exist"),
+    );
+
+    await expect(
+      controller.purchase(2, 1, { user: { id: 1 } }),
+    ).rejects.toThrowError(new NotFoundException("The product doesn't exist"));
+  });
+
+  it("should fail when The inventory is lower than the requested quantity", async () => {
+    FakePurchaseService.executePurchase.mockRejectedValue(
+      new ConflictException(
+        "The inventory is lower than the requested quantity",
+      ),
+    );
+
+    await expect(
+      controller.purchase(2, 1, { user: { id: 1 } }),
+    ).rejects.toThrowError(
+      new ConflictException(
+        "The inventory is lower than the requested quantity",
+      ),
+    );
   });
 });

@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { DepositService } from "./deposit.service";
 import { DepositController } from "./deposit.controller";
 import { DepositRepository } from "./deposit.repository";
+import { ConflictException } from "@nestjs/common";
 
 describe("DepositController", () => {
   let controller: DepositController;
@@ -46,5 +47,17 @@ describe("DepositController", () => {
 
     expect(FakeDepositService.resetDeposit).toHaveBeenCalledWith(1);
     expect(response).toEqual({ deposit: 0 });
+  });
+
+  it("should fail when 'deposit' is undefined", async () => {
+    FakeDepositService.resetDeposit.mockRejectedValue(
+      new ConflictException("Could not reset deposit, please contact support"),
+    );
+
+    await expect(
+      controller.resetDeposit({ user: { id: 1 } }),
+    ).rejects.toThrowError(
+      new ConflictException("Could not reset deposit, please contact support"),
+    );
   });
 });

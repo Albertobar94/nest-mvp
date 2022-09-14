@@ -24,7 +24,7 @@ describe("ProductController", () => {
     putProduct: jest.fn().mockResolvedValue({
       product: [products[2]],
     }),
-    deleteProduct: jest.fn().mockResolvedValue(1),
+    deleteProduct: jest.fn().mockResolvedValue(undefined),
   };
   const FakeProductRepository = {};
 

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const { config } = require("dotenv");
-const BASE_PATH = path.join(__dirname, "database");
 const { ConfigService } = require("@nestjs/config");
+const BASE_PATH = path.join(__dirname, "database");
 
 config({
-  path: `.env.${process.env.NODE_ENV?.toLocaleLowerCase() || "development"}`,
+  path: `.env.${process.env.NODE_ENV?.toLocaleLowerCase() ?? "development"}`,
 });
 const configService = new ConfigService();
 
