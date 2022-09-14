@@ -97,7 +97,8 @@ export class ProductController {
   @Post()
   async postProduct(
     @Body() product: CreateProductDto,
-    @Request() req: Request & { user: JwtDto },
+    @Request()
+    req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
     const data = await this.productService.postProduct(req.user.id, product);
 
@@ -124,7 +125,8 @@ export class ProductController {
   async putProduct(
     @Body() product: UpdateProductDto,
     @Param("id", ParseIntPipe) id: number,
-    @Request() req: Request & { user: JwtDto },
+    @Request()
+    req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
     const data = await this.productService.putProduct(req.user.id, id, product);
 
@@ -150,7 +152,8 @@ export class ProductController {
   @Delete("/:id")
   async deleteProduct(
     @Param("id", ParseIntPipe) id: number,
-    @Request() req: Request & { user: JwtDto },
+    @Request()
+    req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
     return this.productService.deleteProduct(req.user.id, id);
   }

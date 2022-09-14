@@ -6,7 +6,6 @@ import { PurchaseService } from "./purchase.service";
 import { ApiCreatedResponse, ApiHeader, ApiTags } from "@nestjs/swagger";
 import {
   Controller,
-  HttpCode,
   Post,
   Query,
   Request,
@@ -33,12 +32,12 @@ export class PurchaseController {
   })
   @SetMetadata("role", "buyer")
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @HttpCode(201)
   @Post()
   async purchase(
     @Query("productId", ParseIntPipe) productId: PurchaseDto["productId"],
     @Query("quantity", ParseIntPipe) quantity: PurchaseDto["quantity"],
-    @Request() req: Request & { user: JwtDto },
+    @Request()
+    req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
     return this.purchaseService.executePurchase(
       req.user.id,

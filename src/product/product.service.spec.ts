@@ -4,8 +4,8 @@ import ProductRepository from "./product.repository";
 
 describe("ProductService", () => {
   let service: ProductService;
-  const FakeProductService: Partial<ProductService> = {};
-  const FakeProductRepository: Partial<ProductRepository> = {};
+  const FakeProductService = {};
+  const FakeProductRepository = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

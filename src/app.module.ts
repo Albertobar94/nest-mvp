@@ -11,12 +11,12 @@ import { UserService } from "./user/user.service";
 import { UserController } from "./user/user.controller";
 import { UserRepository } from "./user/user.repository";
 import { ProductModule } from "./product/product.module";
-import { BalanceModule } from "./balance/balance.module";
-import { BalanceService } from "./balance/balance.service";
+import { DepositModule } from "./deposit/deposit.module";
+import { DepositService } from "./deposit/deposit.service";
 import { PurchaseModule } from "./purchase/purchase.module";
 import { PurchaseService } from "./purchase/purchase.service";
-import { BalanceController } from "./balance/balance.controller";
-import { BalanceRepository } from "./balance/balance.repository";
+import { DepositController } from "./deposit/deposit.controller";
+import { DepositRepository } from "./deposit/deposit.repository";
 import { PurchaseRepository } from "./purchase/purchase.repository";
 import { PurchaseController } from "./purchase/purchase.controller";
 
@@ -66,17 +66,17 @@ const knexFile = require("../knexfile.js");
     }),
     ProductModule,
     UserModule,
-    BalanceModule,
+    DepositModule,
     AuthModule,
     PurchaseModule,
   ],
-  controllers: [UserController, BalanceController, PurchaseController],
+  controllers: [UserController, DepositController, PurchaseController],
   providers: [
     UserService,
-    BalanceService,
+    DepositService,
     PurchaseService,
     UserRepository,
-    BalanceRepository,
+    DepositRepository,
     PurchaseRepository,
   ],
 })

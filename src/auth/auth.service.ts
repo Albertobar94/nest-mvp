@@ -10,7 +10,7 @@ import UserEntity from "../user/entities/user.entity";
 import UserRepository from "../user/user.repository";
 import { InjectRedis } from "@liaoliaots/nestjs-redis";
 import { instanceToInstance } from "class-transformer";
-import { ONE_THOUSAND_MS } from "src/constants/time-constants.constant";
+import { ONE_THOUSAND_MS } from "./constants/time-constants.constant";
 import JwtDto from "./dto/jwt.dto";
 
 @Injectable()

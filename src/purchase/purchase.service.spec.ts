@@ -4,8 +4,8 @@ import PurchaseRepository from "./purchase.repository";
 
 describe("PurchaseService", () => {
   let service: PurchaseService;
-  const FakePurchaseService: Partial<PurchaseService> = {};
-  const FakePurchaseRepository: Partial<PurchaseRepository> = {};
+  const FakePurchaseService = {};
+  const FakePurchaseRepository = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

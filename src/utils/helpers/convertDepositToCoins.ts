@@ -1,6 +1,6 @@
-import { ALLOWED_COINS } from "../../constants/allowed-coins.constant";
+import { ALLOWED_COINS } from "../../deposit/constants/allowed-coins.constant";
 
-export function balanceToCoins(
+export function depositToCoins(
   amount: number,
   coins: number[] = ALLOWED_COINS,
 ): number[] {
@@ -14,9 +14,9 @@ export function balanceToCoins(
 
   if (amount >= coins[0]) {
     const left = amount - coins[0];
-    return [coins[0]].concat(balanceToCoins(left, coins));
+    return [coins[0]].concat(depositToCoins(left, coins));
   } else {
     coins.shift();
-    return balanceToCoins(amount, coins);
+    return depositToCoins(amount, coins);
   }
 }

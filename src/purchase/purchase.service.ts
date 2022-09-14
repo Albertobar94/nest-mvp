@@ -8,8 +8,8 @@ import {
 import { PurchaseDto } from "./dto/purchase.dto";
 import { PurchaseRepository } from "./purchase.repository";
 import { ProductRepository } from "../product/product.repository";
-import { BalanceRepository } from "../balance/balance.repository";
-import { balanceToCoins } from "../utils/helpers/convertBalanceToCoins";
+import { DepositRepository } from "../deposit/deposit.repository";
+import { depositToCoins } from "../utils/helpers/convertDepositToCoins";
 
 @Injectable()
 export class PurchaseService {
@@ -17,7 +17,7 @@ export class PurchaseService {
     @InjectModel() private readonly knex: Knex,
     private readonly purchaseRepository: PurchaseRepository,
     private readonly productRepository: ProductRepository,
-    private readonly balanceRepository: BalanceRepository,
+    private readonly depositRepository: DepositRepository,
   ) {}
 
   async executePurchase(
@@ -40,15 +40,15 @@ export class PurchaseService {
         );
       }
 
-      // Lock buyer's balance
-      const buyersBalance = await this.balanceRepository.getBalance(
+      // Lock buyer's deposit
+      const buyersDeposit = await this.depositRepository.getDeposit(
         buyerId,
         trx,
       );
 
-      if (buyersBalance < purchaseSubTotal) {
+      if (buyersDeposit < purchaseSubTotal) {
         throw new ConflictException(
-          "The buyer's balance is lower than the purchase sub total",
+          "The buyer's deposit is lower than the purchase sub total",
         );
       }
 
@@ -71,8 +71,8 @@ export class PurchaseService {
         trx,
       );
 
-      const { buyersBalance: buyersFinalBalance } =
-        await this.balanceRepository.transferBalance(
+      const { buyersDeposit: buyersFinalDeposit } =
+        await this.depositRepository.transferDeposit(
           buyerId,
           product.sellerId,
           purchaseSubTotal,
@@ -85,7 +85,7 @@ export class PurchaseService {
         productName: purchase.itemName,
         quantity: purchase.itemsTotal,
         purchaseTotal: purchase.total,
-        change: balanceToCoins(buyersFinalBalance),
+        change: depositToCoins(buyersFinalDeposit),
       };
     });
   }
