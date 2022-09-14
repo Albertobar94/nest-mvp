@@ -48,6 +48,19 @@ export class UserRepository {
     });
   }
 
+  async updateUser(id: number, data: CreateUserDto) {
+    const user = await this.knex
+      .from<UserEntity>("user")
+      .update({ ...data }, "*")
+      .where("id", id);
+
+    return user.map((user) => {
+      return plainToInstance(UserEntity, user, {
+        excludeExtraneousValues: true,
+      });
+    });
+  }
+
   async deleteUser(id: number) {
     return this.knex.from<UserEntity>("user").delete().where("id", id);
   }

@@ -26,6 +26,7 @@ import { ProductService } from "./product.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { isResourceOwnerGuard } from "./guards/is-resource-owner.guard";
 import UpdateProductDto from "./dto/update-prodcut.dto";
+import JwtDto from "../auth/dto/jwt.dto";
 
 /* -------------------------------------------------------------------------- */
 /*                              Get All Products                              */
@@ -94,7 +95,10 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(201)
   @Post()
-  async postProduct(@Body() product: CreateProductDto, @Request() req: any) {
+  async postProduct(
+    @Body() product: CreateProductDto,
+    @Request() req: Request & { user: JwtDto },
+  ) {
     const data = await this.productService.postProduct(req.user.id, product);
 
     return {
@@ -120,7 +124,7 @@ export class ProductController {
   async putProduct(
     @Body() product: UpdateProductDto,
     @Param("id", ParseIntPipe) id: number,
-    @Request() req: any,
+    @Request() req: Request & { user: JwtDto },
   ) {
     const data = await this.productService.putProduct(req.user.id, id, product);
 
@@ -146,7 +150,7 @@ export class ProductController {
   @Delete("/:id")
   async deleteProduct(
     @Param("id", ParseIntPipe) id: number,
-    @Request() req: any,
+    @Request() req: Request & { user: JwtDto },
   ) {
     return this.productService.deleteProduct(req.user.id, id);
   }

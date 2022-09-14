@@ -1,3 +1,4 @@
+import Redis from "ioredis";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import {
@@ -8,8 +9,9 @@ import {
 import UserEntity from "../user/entities/user.entity";
 import UserRepository from "../user/user.repository";
 import { InjectRedis } from "@liaoliaots/nestjs-redis";
-import Redis from "ioredis";
 import { instanceToInstance } from "class-transformer";
+import { ONE_THOUSAND_MS } from "src/constants/time-constants.constant";
+import JwtDto from "./dto/jwt.dto";
 
 @Injectable()
 export class AuthService {
@@ -38,21 +40,7 @@ export class AuthService {
     });
   }
 
-  // async validateUserAgainstRedis({ username }) {
-  //   const accessTokens = await this.redis.smembers(username);
-  //   if (!accessTokens.length) {
-  //     throw new UnauthorizedException();
-  //   }
-
-  //   const [token] = accessTokens.filter((t) => accessToken === t);
-  //   if (!token) {
-  //     throw new UnauthorizedException();
-  //   }
-
-  //   return true
-  // }
-
-  async logout({ username }: any, accessToken: string) {
+  async validateUserAgainstRedis(accessToken: string, { username }: JwtDto) {
     const accessTokens = await this.redis.smembers(username);
     if (!accessTokens.length) {
       throw new UnauthorizedException();
@@ -63,7 +51,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const removed = await this.redis.srem(username, token);
+    return true;
+  }
+
+  async logout({ username }: JwtDto, accessToken: string) {
+    const removed = await this.redis.srem(username, accessToken);
     if (removed === 0) {
       throw new BadGatewayException(
         "Could not remove session, please try again later.",
@@ -73,11 +65,8 @@ export class AuthService {
     return true;
   }
 
-  async logoutAll({ username }: any) {
+  async logoutAll({ username }: JwtDto) {
     const accessTokens = await this.redis.smembers(username);
-    if (!accessTokens.length) {
-      throw new UnauthorizedException();
-    }
 
     const removed = await this.redis.srem(username, accessTokens);
     if (removed === 0) {
@@ -89,7 +78,7 @@ export class AuthService {
     return true;
   }
 
-  async login(user: Omit<UserEntity, "password">) {
+  async login(user: JwtDto) {
     const accessToken = this.jwtService.sign({
       id: user.id,
       username: user.username,
@@ -108,18 +97,18 @@ export class AuthService {
       return { accessToken };
     }
 
-    const now = Math.floor(Date.now() / 1000);
+    const now = Math.floor(Date.now() / ONE_THOUSAND_MS);
 
-    const activeSessions = sessions.filter((s: any) => {
-      const session = this.jwtService.decode(s) as any;
+    const activeSessions = sessions.filter((s: string) => {
+      const session = this.jwtService.decode(s) as Record<string, any>;
       if (session.exp < now) {
         return false;
       }
       return true;
     });
 
-    const unActiveSessions = sessions.filter((s: any) => {
-      const session = this.jwtService.decode(s) as any;
+    const unActiveSessions = sessions.filter((s: string) => {
+      const session = this.jwtService.decode(s) as Record<string, any>;
       if (session.exp < now) {
         return true;
       }

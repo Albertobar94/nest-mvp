@@ -13,11 +13,15 @@ import {
   SetMetadata,
   UseGuards,
 } from "@nestjs/common";
+import JwtDto from "../auth/dto/jwt.dto";
 
 @Controller("buy")
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
 
+  /* -------------------------------------------------------------------------- */
+  /*                               Create Purchase                              */
+  /* -------------------------------------------------------------------------- */
   @ApiTags("Purchase")
   @ApiHeader({
     name: "Authorization",
@@ -34,7 +38,7 @@ export class PurchaseController {
   async purchase(
     @Query("productId", ParseIntPipe) productId: PurchaseDto["productId"],
     @Query("quantity", ParseIntPipe) quantity: PurchaseDto["quantity"],
-    @Request() req: any,
+    @Request() req: Request & { user: JwtDto },
   ) {
     return this.purchaseService.executePurchase(
       req.user.id,

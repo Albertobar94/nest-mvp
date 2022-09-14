@@ -18,6 +18,7 @@ import {
 import { extractBearerToken } from "../utils/helpers/extractBearerToken";
 import { LoggedInDto } from "./dto/logged-in.dto";
 import LoginDto from "./dto/login.dto";
+import JwtDto from "./dto/jwt.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -37,7 +38,11 @@ export class AuthController {
   })
   @UseGuards(LocalAuthGuard)
   @Post("login")
-  async login(@Request() req: any, @Body() _: LoginDto) {
+  async login(
+    @Request() req: Request & { user: JwtDto },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Body() body: LoginDto,
+  ) {
     return this.authService.login(req.user);
   }
 
@@ -55,10 +60,13 @@ export class AuthController {
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   @Post("logout")
-  async logout(@Request() req: any) {
+  async logout(
+    @Request()
+    req: Request & { user: JwtDto; headers: Record<string, any> },
+  ) {
     return this.authService.logout(
       req.user,
-      extractBearerToken(req.headers["authorization"]),
+      extractBearerToken(req.headers.authorization),
     );
   }
 
@@ -76,7 +84,7 @@ export class AuthController {
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   @Post("logout/all")
-  async logoutAll(@Request() req: any) {
+  async logoutAll(@Request() req: Request & { user: JwtDto }) {
     return this.authService.logoutAll(req.user);
   }
 }

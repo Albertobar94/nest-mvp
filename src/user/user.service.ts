@@ -28,6 +28,17 @@ export class UserService {
     };
   }
 
+  async putUser(
+    id: number,
+    data: CreateUserDto,
+  ): Promise<Record<string, UserEntity[]>> {
+    const user = await this.userRepository.updateUser(id, data);
+
+    return {
+      user,
+    };
+  }
+
   async deleteUser(id: number): Promise<number> {
     return this.userRepository.deleteUser(id);
   }

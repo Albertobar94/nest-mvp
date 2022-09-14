@@ -2,7 +2,7 @@ import { Knex } from "knex";
 import { InjectModel } from "nest-knexjs";
 import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
-import { PurchaseEntity } from "./purchase.entity";
+import { PurchaseEntity } from "./entities/purchase.entity";
 
 @Injectable()
 export class PurchaseRepository {

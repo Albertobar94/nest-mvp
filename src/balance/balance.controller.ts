@@ -13,11 +13,15 @@ import { AmountDto } from "./dto/amount.dto";
 import { RoleGuard } from "../auth/guards/roles.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import DepositDto from "./dto/deposit.dto";
+import JwtDto from "src/auth/dto/jwt.dto";
 
 @Controller("balance")
 export class BalanceController {
   constructor(private readonly balanceService: BalanceService) {}
 
+  /* -------------------------------------------------------------------------- */
+  /*                               Add to Deposit                               */
+  /* -------------------------------------------------------------------------- */
   @ApiTags("Balance")
   @ApiHeader({
     name: "Authorization",
@@ -31,7 +35,10 @@ export class BalanceController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(200)
   @Post("deposit")
-  async addBalance(@Body() payload: AmountDto, @Request() req: any) {
+  async addBalance(
+    @Body() payload: AmountDto,
+    @Request() req: Request & { user: JwtDto },
+  ) {
     const deposit = await this.balanceService.addBalance(
       req.user.id,
       payload.amount,
@@ -42,6 +49,9 @@ export class BalanceController {
     };
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                Reset Deposit                               */
+  /* -------------------------------------------------------------------------- */
   @ApiTags("Balance")
   @ApiHeader({
     name: "Authorization",
@@ -54,7 +64,7 @@ export class BalanceController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(200)
   @Post("reset")
-  async resetBalance(@Request() req: any) {
+  async resetBalance(@Request() req: Request & { user: JwtDto }) {
     const balance = await this.balanceService.resetBalance(req.user.id);
 
     return {

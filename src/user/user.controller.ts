@@ -1,5 +1,5 @@
 import { AuthService } from "./../auth/auth.service";
-import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { isResourceOwnerGuard } from "./../product/guards/is-resource-owner.guard";
 import { ParseIntPipe } from "./../pipes/parse-int.pipe";
 import {
@@ -10,6 +10,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -65,6 +66,31 @@ export class UserController {
   @Post()
   async postUser(@Body() data: CreateUserDto) {
     const { user } = await this.userService.postUser(data);
+
+    return {
+      user,
+    };
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                 Update User                                */
+  /* -------------------------------------------------------------------------- */
+  @ApiTags("User")
+  @ApiHeader({
+    name: "Authorization",
+    description: "Bearer user JWT token",
+  })
+  @ApiOkResponse({
+    description: "The record has been successfully updated.",
+    type: [UserEntity],
+  })
+  @UseGuards(JwtAuthGuard, isResourceOwnerGuard)
+  @Put("/:id")
+  async putProduct(
+    @Body() data: CreateUserDto,
+    @Param("id", ParseIntPipe) id: number,
+  ) {
+    const { user } = await this.userService.putUser(id, data);
 
     return {
       user,

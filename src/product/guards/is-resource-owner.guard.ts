@@ -5,6 +5,7 @@ import {
   Logger,
 } from "@nestjs/common";
 import { Request } from "express";
+import JwtDto from "../../auth/dto/jwt.dto";
 
 @Injectable()
 export class isResourceOwnerGuard implements CanActivate {
@@ -14,7 +15,7 @@ export class isResourceOwnerGuard implements CanActivate {
     const id = parseInt(request.params["id"]);
     const controllerName = context.getClass().name;
     const methodName = context.getHandler().name;
-    const user = request.user as any;
+    const user = request.user as JwtDto;
     const isValid = id === user.id;
 
     if (!isValid) {

@@ -1,29 +1,28 @@
 import * as Joi from "joi";
 import { Module } from "@nestjs/common";
-// @ts-expect-error efaef
-import * as knexFile from "../knexfile";
 import { KnexModule } from "nest-knexjs";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { ProductModule } from "./product/product.module";
-import { ThrottlerModule } from "@nestjs/throttler";
-import { UserController } from "./user/user.controller";
-import { UserService } from "./user/user.service";
-import { BalanceController } from "./balance/balance.controller";
-import { BalanceService } from "./balance/balance.service";
-import { UserModule } from "./user/user.module";
-import { BalanceModule } from "./balance/balance.module";
-import { RedisModule } from "@liaoliaots/nestjs-redis";
-import { AuthModule } from "./auth/auth.module";
-import { PurchaseController } from "./purchase/purchase.controller";
-import { PurchaseService } from "./purchase/purchase.service";
-import { PurchaseModule } from "./purchase/purchase.module";
-// @ts-expect-error efaef
 import * as knexStringcase from "knex-stringcase";
-import UserRepository from "./user/user.repository";
-import BalanceRepository from "./balance/balance.repository";
-import PurchaseRepository from "./purchase/purchase.repository";
+import { ThrottlerModule } from "@nestjs/throttler";
+import { RedisModule } from "@liaoliaots/nestjs-redis";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { UserModule } from "./user/user.module";
+import { AuthModule } from "./auth/auth.module";
+import { UserService } from "./user/user.service";
+import { UserController } from "./user/user.controller";
+import { UserRepository } from "./user/user.repository";
+import { ProductModule } from "./product/product.module";
+import { BalanceModule } from "./balance/balance.module";
+import { BalanceService } from "./balance/balance.service";
+import { PurchaseModule } from "./purchase/purchase.module";
+import { PurchaseService } from "./purchase/purchase.service";
+import { BalanceController } from "./balance/balance.controller";
+import { BalanceRepository } from "./balance/balance.repository";
+import { PurchaseRepository } from "./purchase/purchase.repository";
+import { PurchaseController } from "./purchase/purchase.controller";
 
 const ENVIRONMENT = process.env.NODE_ENV?.toLocaleLowerCase() || "development";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const knexFile = require("../knexfile.js");
 
 @Module({
   imports: [

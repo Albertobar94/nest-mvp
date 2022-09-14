@@ -9,9 +9,6 @@ config({
 });
 const configService = new ConfigService();
 
-/**
- * @type { import("knex").Knex.Config }
- */
 const knexConfig = {
   client: "postgresql",
   connection: {
@@ -33,9 +30,6 @@ const knexConfig = {
   },
 };
 
-/**
- * @type { Record<string, import("knex").Knex.Config> }
- */
 module.exports = {
   development: knexConfig,
   test: knexConfig,
