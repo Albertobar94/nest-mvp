@@ -48,10 +48,10 @@ export class ProductController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getProducts(): Promise<Record<string, unknown>> {
-    const data = await this.productService.getProducts();
+    const { products } = await this.productService.getProducts();
 
     return {
-      ...data,
+      products,
     };
   }
 
@@ -72,10 +72,10 @@ export class ProductController {
   async getProduct(
     @Param("id", ParseIntPipe) id: number,
   ): Promise<Record<string, unknown>> {
-    const data = await this.productService.getProduct(id);
+    const { product } = await this.productService.getProduct(id);
 
     return {
-      ...data,
+      product,
     };
   }
 
@@ -96,14 +96,17 @@ export class ProductController {
   @HttpCode(201)
   @Post()
   async postProduct(
-    @Body() product: CreateProductDto,
+    @Body() data: CreateProductDto,
     @Request()
     req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
-    const data = await this.productService.postProduct(req.user.id, product);
+    const { product } = await this.productService.postProduct(
+      req.user.id,
+      data,
+    );
 
     return {
-      ...data,
+      product,
     };
   }
 
@@ -123,15 +126,19 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put("/:id")
   async putProduct(
-    @Body() product: UpdateProductDto,
+    @Body() data: UpdateProductDto,
     @Param("id", ParseIntPipe) id: number,
     @Request()
     req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
-    const data = await this.productService.putProduct(req.user.id, id, product);
+    const { product } = await this.productService.putProduct(
+      req.user.id,
+      id,
+      data,
+    );
 
     return {
-      ...data,
+      product,
     };
   }
 
@@ -155,6 +162,8 @@ export class ProductController {
     @Request()
     req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
-    return this.productService.deleteProduct(req.user.id, id);
+    await this.productService.deleteProduct(req.user.id, id);
+
+    return;
   }
 }

@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 import { Module } from "@nestjs/common";
 import { KnexModule } from "nest-knexjs";
-import * as knexStringcase from "knex-stringcase";
+import * as knexStringCase from "knex-stringcase";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { RedisModule } from "@liaoliaots/nestjs-redis";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -47,7 +47,7 @@ const knexFile = require("../knexfile.js");
       limit: 10,
     }),
     KnexModule.forRoot({
-      config: knexStringcase(knexFile[ENVIRONMENT]),
+      config: knexStringCase(knexFile[ENVIRONMENT]),
     }),
     RedisModule.forRootAsync({
       imports: [ConfigModule],

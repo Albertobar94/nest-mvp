@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import {
   Body,
   Controller,
@@ -7,18 +6,19 @@ import {
   Request,
   UseGuards,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { LocalAuthGuard } from "./guards/local-auth.guard";
 import {
   ApiHeader,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { extractBearerToken } from "../utils/helpers/extractBearerToken";
+import { JwtDto } from "./dto/jwt.dto";
+import { LoginDto } from "./dto/login.dto";
+import { AuthService } from "./auth.service";
 import { LoggedInDto } from "./dto/logged-in.dto";
-import LoginDto from "./dto/login.dto";
-import JwtDto from "./dto/jwt.dto";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { extractBearerToken } from "../utils/helpers/extractBearerToken";
 
 @Controller("auth")
 export class AuthController {
@@ -43,7 +43,12 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() body: LoginDto,
   ) {
-    return this.authService.login(req.user);
+    const { accessToken, message } = await this.authService.login(req.user);
+
+    return {
+      accessToken,
+      message,
+    };
   }
 
   /* -------------------------------------------------------------------------- */
@@ -64,10 +69,12 @@ export class AuthController {
     @Request()
     req: Request & { user: JwtDto; headers: Record<string, any> },
   ) {
-    return this.authService.logout(
+    await this.authService.logout(
       req.user,
       extractBearerToken(req.headers.authorization),
     );
+
+    return;
   }
 
   /* -------------------------------------------------------------------------- */
@@ -85,6 +92,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post("logout/all")
   async logoutAll(@Request() req: Request & { user: JwtDto }) {
-    return this.authService.logoutAll(req.user);
+    await this.authService.logoutAll(req.user);
+
+    return;
   }
 }

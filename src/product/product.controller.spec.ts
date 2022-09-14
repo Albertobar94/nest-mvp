@@ -89,6 +89,6 @@ describe("ProductController", () => {
     const response = await controller.deleteProduct(1, jwtDto);
 
     expect(FakeProductService.deleteProduct).toHaveBeenCalledWith(1, 1);
-    expect(response).toEqual(1);
+    expect(response).toEqual(undefined);
   });
 });

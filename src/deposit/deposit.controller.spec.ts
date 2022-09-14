@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { DepositService } from "./deposit.service";
 import { DepositController } from "./deposit.controller";
 import { DepositRepository } from "./deposit.repository";
-import { DepositService } from "./deposit.service";
 
 describe("DepositController", () => {
   let controller: DepositController;

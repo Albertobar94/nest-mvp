@@ -1,8 +1,3 @@
-import { RoleGuard } from "../auth/guards/roles.guard";
-import { JwtAuthGuard } from "./../auth/guards/jwt-auth.guard";
-import { ParseIntPipe } from "./../pipes/parse-int.pipe";
-import { PurchaseDto } from "./dto/purchase.dto";
-import { PurchaseService } from "./purchase.service";
 import { ApiCreatedResponse, ApiHeader, ApiTags } from "@nestjs/swagger";
 import {
   Controller,
@@ -12,7 +7,12 @@ import {
   SetMetadata,
   UseGuards,
 } from "@nestjs/common";
-import JwtDto from "../auth/dto/jwt.dto";
+import { JwtDto } from "../auth/dto/jwt.dto";
+import { PurchaseDto } from "./dto/purchase.dto";
+import { PurchaseService } from "./purchase.service";
+import { RoleGuard } from "../auth/guards/roles.guard";
+import { ParseIntPipe } from "./../pipes/parse-int.pipe";
+import { JwtAuthGuard } from "./../auth/guards/jwt-auth.guard";
 
 @Controller("buy")
 export class PurchaseController {
@@ -39,10 +39,12 @@ export class PurchaseController {
     @Request()
     req: Partial<Request> & { user: Omit<JwtDto, "role" | "username"> },
   ) {
-    return this.purchaseService.executePurchase(
+    const { purchase } = await this.purchaseService.executePurchase(
       req.user.id,
       productId,
       quantity,
     );
+
+    return { purchase };
   }
 }

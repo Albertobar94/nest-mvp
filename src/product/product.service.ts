@@ -15,7 +15,7 @@ export class ProductService {
     };
   }
 
-  async getProduct(id: number): Promise<Record<string, ProductEntity[]>> {
+  async getProduct(id: number) {
     const product = await this.productRepository.getProduct(id);
 
     return {
@@ -26,7 +26,7 @@ export class ProductService {
   async postProduct(
     sellerId: number,
     data: Omit<ProductEntity, "id" | "sellerId">,
-  ): Promise<Record<string, ProductEntity[]>> {
+  ) {
     const product = await this.productRepository.insertProduct(sellerId, data);
 
     return {
@@ -38,7 +38,7 @@ export class ProductService {
     sellerId: number,
     id: number,
     data: Partial<UpdateProductDto>,
-  ): Promise<Record<string, ProductEntity[]>> {
+  ) {
     const product = await this.productRepository.updateProduct(
       sellerId,
       id,

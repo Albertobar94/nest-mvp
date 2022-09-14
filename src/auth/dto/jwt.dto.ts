@@ -1,4 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
   IsNotEmpty,
   IsNumber,
@@ -6,6 +5,7 @@ import {
   IsPositive,
   IsString,
 } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class JwtDto {
   @ApiProperty()

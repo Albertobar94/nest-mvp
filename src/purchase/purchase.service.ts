@@ -1,10 +1,10 @@
 import { Knex } from "knex";
-import { InjectModel } from "nest-knexjs";
 import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { InjectModel } from "nest-knexjs";
 import { PurchaseDto } from "./dto/purchase.dto";
 import { PurchaseRepository } from "./purchase.repository";
 import { ProductRepository } from "../product/product.repository";
@@ -52,7 +52,7 @@ export class PurchaseService {
         );
       }
 
-      const [purchase] = await this.purchaseRepository.insertPurchase(
+      const [record] = await this.purchaseRepository.insertPurchase(
         {
           buyerId,
           sellerId: product.sellerId,
@@ -79,14 +79,16 @@ export class PurchaseService {
           trx,
         );
 
-      return {
-        sellerId: purchase.sellerId,
-        productId: purchase.itemId,
-        productName: purchase.itemName,
-        quantity: purchase.itemsTotal,
-        purchaseTotal: purchase.total,
+      const purchase = {
+        sellerId: record.sellerId,
+        productId: record.itemId,
+        productName: record.itemName,
+        quantity: record.itemsTotal,
+        purchaseTotal: record.total,
         change: depositToCoins(buyersFinalDeposit),
       };
+
+      return { purchase };
     });
   }
 }

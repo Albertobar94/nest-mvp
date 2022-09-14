@@ -1,8 +1,9 @@
 import * as bcrypt from "bcrypt";
 import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UserEntity } from "./entities/user.entity";
 import { UserRepository } from "./user.repository";
+import { UserEntity } from "./entities/user.entity";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UserService {
@@ -30,7 +31,7 @@ export class UserService {
 
   async putUser(
     id: number,
-    data: CreateUserDto,
+    data: UpdateUserDto,
   ): Promise<Record<string, UserEntity[]>> {
     const user = await this.userRepository.updateUser(id, data);
 

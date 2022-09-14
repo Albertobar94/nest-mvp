@@ -1,9 +1,10 @@
 import { Knex } from "knex";
-import { CreateUserDto } from "./dto/create-user.dto";
 import { InjectModel } from "nest-knexjs";
-import { UserEntity } from "./entities/user.entity";
 import { Injectable } from "@nestjs/common";
+import { UserEntity } from "./entities/user.entity";
 import { plainToInstance } from "class-transformer";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UserRepository {
@@ -48,10 +49,10 @@ export class UserRepository {
     });
   }
 
-  async updateUser(id: number, data: CreateUserDto) {
+  async updateUser(id: number, { username }: UpdateUserDto) {
     const user = await this.knex
       .from<UserEntity>("user")
-      .update({ ...data }, "*")
+      .update({ username }, "*")
       .where("id", id);
 
     return user.map((user) => {

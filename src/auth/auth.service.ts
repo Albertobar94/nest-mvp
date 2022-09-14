@@ -1,17 +1,17 @@
 import Redis from "ioredis";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
+import { instanceToInstance } from "class-transformer";
+import { InjectRedis } from "@liaoliaots/nestjs-redis";
 import {
   BadGatewayException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import UserEntity from "../user/entities/user.entity";
-import UserRepository from "../user/user.repository";
-import { InjectRedis } from "@liaoliaots/nestjs-redis";
-import { instanceToInstance } from "class-transformer";
+import { JwtDto } from "./dto/jwt.dto";
+import { UserRepository } from "../user/user.repository";
+import { UserEntity } from "../user/entities/user.entity";
 import { ONE_THOUSAND_MS } from "./constants/time-constants.constant";
-import JwtDto from "./dto/jwt.dto";
 
 @Injectable()
 export class AuthService {

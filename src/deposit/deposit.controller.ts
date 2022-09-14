@@ -1,4 +1,3 @@
-import { DepositService } from "./deposit.service";
 import {
   Body,
   Controller,
@@ -11,10 +10,11 @@ import {
 } from "@nestjs/common";
 import { ApiHeader, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { AmountDto } from "./dto/amount.dto";
+import { JwtDto } from "../auth/dto/jwt.dto";
+import { DepositDto } from "./dto/deposit.dto";
+import { DepositService } from "./deposit.service";
 import { RoleGuard } from "../auth/guards/roles.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import DepositDto from "./dto/deposit.dto";
-import JwtDto from "src/auth/dto/jwt.dto";
 
 @Controller("deposit")
 export class DepositController {

@@ -1,7 +1,3 @@
-import { AuthService } from "./../auth/auth.service";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import { isResourceOwnerGuard } from "./../product/guards/is-resource-owner.guard";
-import { ParseIntPipe } from "./../pipes/parse-int.pipe";
 import {
   Body,
   Controller,
@@ -21,9 +17,14 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UserEntity } from "./entities/user.entity";
 import { UserService } from "./user.service";
+import { UserEntity } from "./entities/user.entity";
+import { AuthService } from "./../auth/auth.service";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { ParseIntPipe } from "./../pipes/parse-int.pipe";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { isResourceOwnerGuard } from "./../product/guards/is-resource-owner.guard";
 
 @Controller("user")
 export class UserController {
@@ -87,7 +88,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, isResourceOwnerGuard)
   @Put("/:id")
   async putProduct(
-    @Body() data: CreateUserDto,
+    @Body() data: UpdateUserDto,
     @Param("id", ParseIntPipe) id: number,
   ) {
     const { user } = await this.userService.putUser(id, data);
