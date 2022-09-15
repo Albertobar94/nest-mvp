@@ -1,14 +1,12 @@
 version: "3.8"
 services:
-    # These are the configurations for our Node app
-    # When Docker Compose starts this container it will automatically
-    # use the Dockerfile in the directory to configure it
     nest-server-mpv:
         build: .
         depends_on:
             # Our app does not work without our database
             # so this ensures our database is loaded first
-            - nest-server-db
+            - nest-db-mvp
+            - nest-redis-mvp
         ports:
             - "3000:3000"
         volumes:
@@ -30,7 +28,7 @@ services:
             - BCRYPT_ROUNDS=10
             - REDIS_PORT=6379
             - REDIS_DB=1
-            - REDIS_HOST=redis
+            - REDIS_HOST=nest-redis-mvp
             - REDIS_PREFIX=vending_machine
         command: ["/bin/bash", "./scripts/entrypoint.sh"]
 
@@ -42,11 +40,10 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         ports:
-            # Standard port for PostgreSQL databases
             - "5432:5432"
 
 
-    redis:
+    nest-redis-mvp:
         image: redis:6.2-alpine
         restart: always
         ports:
