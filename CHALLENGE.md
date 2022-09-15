@@ -1,6 +1,3 @@
-# What is this?
-
-The following instructions and requirements in this repository represent a step in the [Match](https://mvpmatch.co/) community onboarding process. It's a (hopefully) simple take home exercise to be later used as a conversation starter in our technical discussion. It should also help us in reducing the number of technical challenges a client wants you to go through.
 
 # Exercise brief
 
