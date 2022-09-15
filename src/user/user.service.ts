@@ -1,7 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
-import { UserEntity } from "./entities/user.entity";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 
@@ -9,7 +8,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async getUser(id: number): Promise<Record<string, UserEntity[]>> {
+  async getUser(id: number) {
     const user = await this.userRepository.getUser(id);
 
     return {
@@ -17,7 +16,7 @@ export class UserService {
     };
   }
 
-  async postUser(data: CreateUserDto): Promise<Record<string, UserEntity[]>> {
+  async postUser(data: CreateUserDto) {
     const password = await bcrypt.hash(
       data.password,
       Number(process.env.BCRYPT_ROUNDS) || 10,
@@ -29,10 +28,7 @@ export class UserService {
     };
   }
 
-  async putUser(
-    id: number,
-    data: UpdateUserDto,
-  ): Promise<Record<string, UserEntity[]>> {
+  async putUser(id: number, data: UpdateUserDto) {
     const user = await this.userRepository.updateUser(id, data);
 
     return {
@@ -40,7 +36,9 @@ export class UserService {
     };
   }
 
-  async deleteUser(id: number): Promise<number> {
-    return this.userRepository.deleteUser(id);
+  async deleteUser(id: number) {
+    await this.userRepository.deleteUser(id);
+
+    return;
   }
 }
