@@ -1,5 +1,5 @@
-import { DepositService } from "./deposit.service";
 import { Test, TestingModule } from "@nestjs/testing";
+import { DepositService } from "./deposit.service";
 import { DepositRepository } from "./deposit.repository";
 
 describe("DepositService", () => {

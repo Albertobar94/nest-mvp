@@ -1,7 +1,7 @@
 import { Knex } from "knex";
+import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { DepositRepository } from "./deposit.repository";
-import { ConflictException } from "@nestjs/common";
 
 describe("DepositService", () => {
   let repository: DepositRepository;

@@ -1,8 +1,8 @@
+import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { DepositService } from "./deposit.service";
 import { DepositController } from "./deposit.controller";
 import { DepositRepository } from "./deposit.repository";
-import { ConflictException } from "@nestjs/common";
 
 describe("DepositController", () => {
   let controller: DepositController;
@@ -49,15 +49,19 @@ describe("DepositController", () => {
     expect(response).toEqual({ deposit: 0 });
   });
 
-  it("should fail when 'deposit' is undefined", async () => {
+  it("should fail when The buyer's deposit is lower than the purchase subtotal", async () => {
     FakeDepositService.resetDeposit.mockRejectedValue(
-      new ConflictException("Could not reset deposit, please contact support"),
+      new ConflictException(
+        "The buyer's deposit is lower than the purchase subtotal",
+      ),
     );
 
     await expect(
       controller.resetDeposit({ user: { id: 1 } }),
     ).rejects.toThrowError(
-      new ConflictException("Could not reset deposit, please contact support"),
+      new ConflictException(
+        "The buyer's deposit is lower than the purchase subtotal",
+      ),
     );
   });
 });

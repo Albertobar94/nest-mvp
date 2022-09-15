@@ -41,10 +41,8 @@ export class PurchaseService {
       }
 
       // Lock buyer's deposit
-      const buyersDeposit = await this.depositRepository.getDeposit(
-        buyerId,
-        trx,
-      );
+      const { deposit: buyersDeposit } =
+        await this.depositRepository.getDeposit(buyerId, trx);
 
       if (buyersDeposit < purchaseSubTotal) {
         throw new ConflictException(

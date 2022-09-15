@@ -12,15 +12,9 @@ export class DepositRepository {
       ? this.knex.from<Deposit>("user").transacting(trx).forUpdate()
       : this.knex.from<Deposit>("user");
 
-    const [result] = await query.select("deposit").where("id", userId);
+    const [{ deposit }] = await query.select("deposit").where("id", userId);
 
-    if (result && "deposit" in result) {
-      return result;
-    }
-
-    throw new ConflictException(
-      "Could not get deposit, please contact support",
-    );
+    return { deposit };
   }
 
   async addDeposit(userId: number, amount: number, trx?: Knex.Transaction) {
@@ -28,18 +22,12 @@ export class DepositRepository {
       ? this.knex.from<Deposit>("user").transacting(trx)
       : this.knex.from<Deposit>("user");
 
-    const [result] = await query
+    const [{ deposit }] = await query
       .update({ deposit: this.knex.raw("deposit + ??", [amount]) })
       .where("id", userId)
       .returning("deposit");
 
-    if (result && "deposit" in result) {
-      return result;
-    }
-
-    throw new ConflictException(
-      "Could not deposit amount, please contact support",
-    );
+    return { deposit };
   }
 
   async resetDeposit(userId: number, trx?: Knex.Transaction) {
@@ -47,18 +35,12 @@ export class DepositRepository {
       ? this.knex.from<Deposit>("user").transacting(trx)
       : this.knex.from<Deposit>("user");
 
-    const [result] = await query
+    const [{ deposit }] = await query
       .update({ deposit: 0 })
       .where("id", userId)
       .returning("deposit");
 
-    if (result && "deposit" in result) {
-      return result;
-    }
-
-    throw new ConflictException(
-      "Could not reset deposit, please contact support",
-    );
+    return { deposit };
   }
 
   async transferDeposit(
