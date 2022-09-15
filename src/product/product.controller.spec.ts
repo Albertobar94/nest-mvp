@@ -5,10 +5,13 @@ import {
   products,
   putProductDto,
 } from "./mocks/products.mocks";
+import { ProductService } from "./product.service";
 import { ProductController } from "./product.controller";
 import { ProductRepository } from "./product.repository";
-import { ProductService } from "./product.service";
 
+const milkProduct = [products[0]];
+const cheeseProduct = [products[1]];
+const breadProduct = [products[2]];
 describe("ProductController", () => {
   let controller: ProductController;
   const FakeProductService = {
@@ -16,13 +19,13 @@ describe("ProductController", () => {
       products,
     }),
     getProduct: jest.fn().mockResolvedValue({
-      product: [products[0]],
+      product: milkProduct,
     }),
     postProduct: jest.fn().mockResolvedValue({
-      product: [products[1]],
+      product: cheeseProduct,
     }),
     putProduct: jest.fn().mockResolvedValue({
-      product: [products[2]],
+      product: breadProduct,
     }),
     deleteProduct: jest.fn().mockResolvedValue(undefined),
   };
@@ -49,46 +52,59 @@ describe("ProductController", () => {
 
     expect(FakeProductService.getProducts).toHaveBeenCalledWith();
     expect(FakeProductService.getProducts).toHaveBeenCalledTimes(1);
-    expect((response.products as Record<string, unknown>[]).length).toEqual(3);
+    expect(response.products.length).toEqual(3);
     expect(response.products).toEqual(products);
   });
 
   it("should get product by id", async () => {
-    const response = await controller.getProduct(1);
+    const milkProductId = 1;
+    const response = await controller.getProduct(milkProductId);
 
-    expect(FakeProductService.getProduct).toHaveBeenCalledWith(1);
+    expect(FakeProductService.getProduct).toHaveBeenCalledWith(milkProductId);
     expect(FakeProductService.getProduct).toHaveBeenCalledTimes(1);
-    expect((response.product as Array<Record<string, any>>).length).toEqual(1);
-    expect(response.product).toEqual([products[0]]);
+    expect(response.product.length).toEqual(1);
+    expect(response.product).toEqual(milkProduct);
   });
 
   it("should create a sproduct", async () => {
+    const sellerId = 1;
     const response = await controller.postProduct(postProductDto, jwtDto);
 
     expect(FakeProductService.postProduct).toHaveBeenCalledWith(
-      1,
+      sellerId,
       postProductDto,
     );
     expect(response.product.length).toEqual(1);
-    expect(response.product).toEqual([products[1]]);
+    expect(response.product).toEqual(cheeseProduct);
   });
 
   it("should update product", async () => {
-    const response = await controller.putProduct(putProductDto, 3, jwtDto);
+    const sellerId = 1;
+    const breadProductId = 3;
+    const response = await controller.putProduct(
+      putProductDto,
+      breadProductId,
+      jwtDto,
+    );
 
     expect(FakeProductService.putProduct).toHaveBeenCalledWith(
-      1,
-      3,
+      sellerId,
+      breadProductId,
       putProductDto,
     );
     expect(response.product.length).toEqual(1);
-    expect(response.product).toEqual([products[2]]);
+    expect(response.product).toEqual(breadProduct);
   });
 
   it("should delete a product", async () => {
-    const response = await controller.deleteProduct(1, jwtDto);
+    const sellerId = 1;
+    const milkProductId = 3;
+    const response = await controller.deleteProduct(milkProductId, jwtDto);
 
-    expect(FakeProductService.deleteProduct).toHaveBeenCalledWith(1, 1);
+    expect(FakeProductService.deleteProduct).toHaveBeenCalledWith(
+      sellerId,
+      milkProductId,
+    );
     expect(response).toEqual(undefined);
   });
 });

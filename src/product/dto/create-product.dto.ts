@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsMultipleOf } from "../../utils/decorators";
 import { IsString, IsNotEmpty, IsNumber, IsPositive } from "class-validator";
+import { IsMultipleOf } from "../../utils/decorators";
 
 export class CreateProductDto {
   @ApiProperty()

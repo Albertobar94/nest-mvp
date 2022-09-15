@@ -1,5 +1,3 @@
-import { RoleGuard } from "../auth/guards/roles.guard";
-import { ParseIntPipe } from "./../pipes/parse-int.pipe";
 import {
   Body,
   Controller,
@@ -20,13 +18,15 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
 } from "@nestjs/swagger";
-import { CreateProductDto } from "./dto/create-product.dto";
-import { ProductEntity } from "./entities/product.entity";
+import { JwtDto } from "../auth/dto/jwt.dto";
 import { ProductService } from "./product.service";
+import { RoleGuard } from "../auth/guards/roles.guard";
+import { ParseIntPipe } from "./../pipes/parse-int.pipe";
+import { ProductEntity } from "./entities/product.entity";
+import { UpdateProductDto } from "./dto/update-product.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { isResourceOwnerGuard } from "./guards/is-resource-owner.guard";
-import UpdateProductDto from "./dto/update-prodcut.dto";
-import JwtDto from "../auth/dto/jwt.dto";
 
 /* -------------------------------------------------------------------------- */
 /*                              Get All Products                              */
@@ -47,7 +47,7 @@ export class ProductController {
   })
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getProducts(): Promise<Record<string, unknown>> {
+  async getProducts() {
     const { products } = await this.productService.getProducts();
 
     return {
@@ -69,9 +69,7 @@ export class ProductController {
   })
   @UseGuards(JwtAuthGuard)
   @Get("/:id")
-  async getProduct(
-    @Param("id", ParseIntPipe) id: number,
-  ): Promise<Record<string, unknown>> {
+  async getProduct(@Param("id", ParseIntPipe) id: number) {
     const { product } = await this.productService.getProduct(id);
 
     return {

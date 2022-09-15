@@ -1,5 +1,3 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsMultipleOf } from "../../utils/decorators";
 import {
   IsString,
   IsNotEmpty,
@@ -7,6 +5,8 @@ import {
   IsPositive,
   IsOptional,
 } from "class-validator";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsMultipleOf } from "../../utils/decorators";
 
 export class UpdateProductDto {
   @ApiPropertyOptional()

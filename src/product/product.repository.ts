@@ -1,20 +1,19 @@
 import { Knex } from "knex";
-import { CreateProductDto } from "./dto/create-product.dto";
 import { InjectModel } from "nest-knexjs";
 import { Injectable } from "@nestjs/common";
-import { ProductEntity } from "./entities/product.entity";
 import { plainToInstance } from "class-transformer";
+import { ProductEntity } from "./entities/product.entity";
+import { CreateProductDto } from "./dto/create-product.dto";
 
 @Injectable()
 export class ProductRepository {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async getAll() {
+    // When products go over x amount of items pagination must be introduced
     const products = await this.knex.from("product").select();
     return products.map((product) => {
-      return plainToInstance(ProductEntity, product, {
-        excludeExtraneousValues: true,
-      });
+      return plainToInstance(ProductEntity, product);
     });
   }
 
@@ -25,9 +24,7 @@ export class ProductRepository {
 
     const product = await query.select().where("id", id).returning("*");
     return product.map((product) => {
-      return plainToInstance(ProductEntity, product, {
-        excludeExtraneousValues: true,
-      });
+      return plainToInstance(ProductEntity, product);
     });
   }
 
@@ -37,9 +34,7 @@ export class ProductRepository {
       .insert({ ...data, sellerId }, "*");
 
     return product.map((product) => {
-      return plainToInstance(ProductEntity, product, {
-        excludeExtraneousValues: true,
-      });
+      return plainToInstance(ProductEntity, product);
     });
   }
 
@@ -54,9 +49,7 @@ export class ProductRepository {
       .where({ id, sellerId });
 
     return product.map((product) => {
-      return plainToInstance(ProductEntity, product, {
-        excludeExtraneousValues: true,
-      });
+      return plainToInstance(ProductEntity, product);
     });
   }
 
@@ -66,7 +59,7 @@ export class ProductRepository {
     trx?: Knex.Transaction,
   ) {
     const query = trx
-      ? this.knex.from<ProductEntity>("product").transacting(trx).forUpdate()
+      ? this.knex.from<ProductEntity>("product").transacting(trx)
       : this.knex.from<ProductEntity>("product");
 
     const product = await query
@@ -79,9 +72,7 @@ export class ProductRepository {
       .where("id", id);
 
     return product.map((product) => {
-      return plainToInstance(ProductEntity, product, {
-        excludeExtraneousValues: true,
-      });
+      return plainToInstance(ProductEntity, product);
     });
   }
 
