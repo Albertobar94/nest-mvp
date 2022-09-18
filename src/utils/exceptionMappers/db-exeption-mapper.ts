@@ -1,8 +1,10 @@
 import { databaseExceptionsMessages } from "./db-exception-messages";
 
-type errorMapperResponse = [number, string | null];
+type exceptionMapperResponse = { status: number; message: string | null };
 
-export const databaseExceptionMapper = (err: Error): errorMapperResponse => {
+export const databaseExceptionMapper = (
+  err: Error,
+): exceptionMapperResponse => {
   let message: string | null = null;
   let status = 500;
 
@@ -17,5 +19,5 @@ export const databaseExceptionMapper = (err: Error): errorMapperResponse => {
     }
   });
 
-  return [status, message];
+  return { status, message };
 };

@@ -9,9 +9,9 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiHeader, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { AmountDto } from "./dto/amount.dto";
-import { JwtDto } from "../auth/dto/jwt.dto";
-import { DepositDto } from "./dto/deposit.dto";
+import { AmountDto } from "./dto/deposit-request.dto";
+import { JwtDto } from "../auth/dto/jwt-payload.dto";
+import { DepositDto } from "./dto/deposit-response.dto";
 import { DepositService } from "./deposit.service";
 import { RoleGuard } from "../auth/guards/roles.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";

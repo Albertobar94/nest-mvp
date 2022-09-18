@@ -5,7 +5,7 @@ import {
   Logger,
 } from "@nestjs/common";
 import { Request } from "express";
-import { JwtDto } from "../../auth/dto/jwt.dto";
+import { JwtDto } from "../../auth/dto/jwt-payload.dto";
 
 @Injectable()
 export class isResourceOwnerGuard implements CanActivate {

@@ -7,8 +7,8 @@ import {
   SetMetadata,
   UseGuards,
 } from "@nestjs/common";
-import { JwtDto } from "../auth/dto/jwt.dto";
-import { PurchaseDto } from "./dto/purchase.dto";
+import { JwtDto } from "../auth/dto/jwt-payload.dto";
+import { PurchaseDto } from "./dto/purchase-request.dto";
 import { PurchaseService } from "./purchase.service";
 import { RoleGuard } from "../auth/guards/roles.guard";
 import { ParseIntPipe } from "./../pipes/parse-int.pipe";

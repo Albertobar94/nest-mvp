@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "nest-knexjs";
-import { PurchaseDto } from "./dto/purchase.dto";
+import { PurchaseDto } from "./dto/purchase-request.dto";
 import { PurchaseRepository } from "./purchase.repository";
 import { ProductRepository } from "../product/product.repository";
 import { DepositRepository } from "../deposit/deposit.repository";

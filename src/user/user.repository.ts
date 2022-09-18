@@ -3,8 +3,8 @@ import { InjectModel } from "nest-knexjs";
 import { Injectable } from "@nestjs/common";
 import { UserEntity } from "./entities/user.entity";
 import { plainToInstance } from "class-transformer";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user-request.dto";
+import { CreateUserDto } from "./dto/create-user-request.dto";
 
 @Injectable()
 export class UserRepository {

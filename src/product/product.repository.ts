@@ -3,7 +3,7 @@ import { InjectModel } from "nest-knexjs";
 import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { ProductEntity } from "./entities/product.entity";
-import { CreateProductDto } from "./dto/create-product.dto";
+import { CreateProductDto } from "./dto/create-product-request.dto";
 
 @Injectable()
 export class ProductRepository {

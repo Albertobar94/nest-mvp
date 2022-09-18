@@ -8,7 +8,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { JwtDto } from "./dto/jwt.dto";
+import { JwtDto } from "./dto/jwt-payload.dto";
 import { UserRepository } from "../user/user.repository";
 import { UserEntity } from "../user/entities/user.entity";
 import { ONE_THOUSAND_MS } from "./constants/time-constants.constant";

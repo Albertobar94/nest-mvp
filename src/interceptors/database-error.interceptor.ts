@@ -15,7 +15,7 @@ export class DatabaseErrorInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError((error) => {
-        const [status, message] = databaseExceptionMapper(error);
+        const { status, message } = databaseExceptionMapper(error);
 
         switch (status) {
           case 400:

@@ -12,10 +12,10 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { JwtDto } from "./dto/jwt.dto";
-import { LoginDto } from "./dto/login.dto";
+import { JwtDto } from "./dto/jwt-payload.dto";
+import { LoginDto } from "./dto/login-request.dto";
 import { AuthService } from "./auth.service";
-import { LoggedInDto } from "./dto/logged-in.dto";
+import { LoggedInDto } from "./dto/login-response.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { extractBearerToken } from "../utils/helpers/extractBearerToken";

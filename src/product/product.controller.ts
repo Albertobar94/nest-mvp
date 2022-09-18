@@ -18,13 +18,13 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
 } from "@nestjs/swagger";
-import { JwtDto } from "../auth/dto/jwt.dto";
+import { JwtDto } from "../auth/dto/jwt-payload.dto";
 import { ProductService } from "./product.service";
 import { RoleGuard } from "../auth/guards/roles.guard";
 import { ParseIntPipe } from "./../pipes/parse-int.pipe";
 import { ProductEntity } from "./entities/product.entity";
-import { UpdateProductDto } from "./dto/update-product.dto";
-import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product-request.dto";
+import { CreateProductDto } from "./dto/create-product-request.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { isResourceOwnerGuard } from "./guards/is-resource-owner.guard";
 
